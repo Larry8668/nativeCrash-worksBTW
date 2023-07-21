@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import ErrorBoundary from "./ErrorBoundary";
 
@@ -12,21 +12,16 @@ function PageContent() {
   const counterRemove = () => {
     setState((prevState) => prevState - 1);
   };
-
   if (state < 0) {
     throw new Error("Value should be Postitive");
   }
-
   return (
     <>
       <View
         style={{
           flex: 1,
-
           justifyContent: "center",
-
           alignItems: "center",
-
           flexDirection: "row",
         }}
       >
@@ -37,17 +32,13 @@ function PageContent() {
           android_ripple={{ color: "silver" }}
           style={{
             paddingHorizontal: 20,
-
             paddingVertical: 6,
-
             backgroundColor: "silver",
           }}
         >
           <Text> + </Text>
         </Pressable>
-
         <Text style={{ paddingHorizontal: 6 }}> {state} </Text>
-
         <Pressable
           onPress={() => {
             counterRemove();
@@ -55,9 +46,7 @@ function PageContent() {
           android_ripple={{ color: "silver" }}
           style={{
             paddingHorizontal: 20,
-
             paddingVertical: 6,
-
             backgroundColor: "silver",
           }}
         >
@@ -68,12 +57,12 @@ function PageContent() {
   );
 }
 
-export default function Page(){
-  return(
-    <ErrorBoundary>
+export default function Page() {
+  return (
+    <ErrorBoundary theme = 'DARK_MODE'>
       <PageContent />
     </ErrorBoundary>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
