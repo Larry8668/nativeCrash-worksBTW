@@ -5,6 +5,14 @@
       "bundler": "metro"
     },
     "name": "nativeCrash",
-    "slug": "nativeCrash"
+    "slug": "nativeCrash",
+    "extra": {
+      "eas": {
+        "projectId": "bc9a7066-c926-471f-886e-690e38dc987e"
+      }
+    },
+    "android": {
+      "package": "com.l_arry.nativeCrash"
+    }
   }
 }
