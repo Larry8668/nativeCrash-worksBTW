@@ -7,15 +7,39 @@ import {
   TouchableOpacity,
 } from "react-native";
 import ErrorBoundary from "./ErrorBoundary";
-import { buttonStyles, headingStyles } from "./styles/inedx";
+import {
+  buttonStyles,
+  headingStyles,
+  contactDevButtonStyle,
+} from "./styles/inedx";
 import { useColorScheme } from "nativewind";
 import { useRouter } from "expo-router";
+
+import { getAllData, clearAllData } from "./dataService";
 
 function PageContent() {
   const theme = useColorScheme();
   const router = useRouter();
-  console.log(theme);
+  // console.log(theme);
   const [state, setState] = useState(0);
+  const [asyncStoreData, setAsyncStoreData] = useState(null);
+
+  const handleGetAllData = () => {
+    // console.log("Entered handleGetAllData");
+    getAllData()
+      .then((data) => {
+        // console.log("returned...");
+        setAsyncStoreData(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching all data --> ", error);
+      });
+  };
+  const handleClearAsyncStorage = () => {
+    clearAllData()
+      .then(() => console.log("Async Storage emptied ..."))
+      .catch((error) => console.error("Error clearing storage --> ", error));
+  };
 
   const counterAdd = () => {
     setState((prevState) => prevState + 1);
@@ -34,58 +58,72 @@ function PageContent() {
     }
     recursiveFunction();
   }
+  useEffect(() => {
+    handleGetAllData();
+    // console.log("here -->",asyncStoreData);
+    // handleClearAsyncStorage();
+  }, []);
   return (
     <>
-      <View className="flex flex-col items-center justify-center bg-black h-[100%]">
-        <View className = 'flex flex-col items-center justify-center space-y-4'>
-          <Text className = {`${headingStyles}`}>R_crashlytics</Text>
-          <Text className = {`${headingStyles}`}>This one Works</Text>
-        </View>
-        <View className = 'flex flex-row m-3 space-x-4 '>
-          <TouchableOpacity
-          className = {`${buttonStyles}`}
+      <View className="flex flex-col items-center justify-around bg-black h-[100%]">
+        <View className="flex flex-col items-center justify-center h-auto">
+          <View className="flex flex-col items-center justify-center space-y-4">
+            <Text className={`${headingStyles}`}>R_crashlytics</Text>
+            <Text className={`${headingStyles}`}>This one Works</Text>
+          </View>
+          <View className="flex flex-row m-3 space-x-4 ">
+            <TouchableOpacity
+              className={`${buttonStyles}`}
+              onPress={() => {
+                router.push("/crashScreen1");
+              }}
+            >
+              <Text>Crash 1</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className={`${buttonStyles}`}
+              onPress={() => {
+                router.push("/crashScreen2");
+              }}
+            >
+              <Text>Crash 2</Text>
+            </TouchableOpacity>
+          </View>
+          <Pressable
             onPress={() => {
-              router.push("/crashScreen1");
+              counterAdd();
+            }}
+            android_ripple={{ color: "silver" }}
+            style={{
+              paddingHorizontal: 20,
+              paddingVertical: 6,
+              backgroundColor: "silver",
             }}
           >
-            <Text>Crash 1</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-          className = {`${buttonStyles}`}
+            <Text> + </Text>
+          </Pressable>
+          <Text style={{ paddingHorizontal: 6 }}> {state} </Text>
+          <Pressable
             onPress={() => {
-              router.push("/crashScreen2");
+              counterRemove();
+            }}
+            android_ripple={{ color: "silver" }}
+            style={{
+              paddingHorizontal: 20,
+              paddingVertical: 6,
+              backgroundColor: "silver",
             }}
           >
-            <Text>Crash 2</Text>
-          </TouchableOpacity>
+            <Text> - </Text>
+          </Pressable>
         </View>
-        <Pressable
-          onPress={() => {
-            counterAdd();
-          }}
-          android_ripple={{ color: "silver" }}
-          style={{
-            paddingHorizontal: 20,
-            paddingVertical: 6,
-            backgroundColor: "silver",
-          }}
+        <TouchableOpacity
+          className={`${contactDevButtonStyle}`}
+          onPress={() => console.log(asyncStoreData)}
+          // disabled={!(asyncStoreData === null)} //NOT WORKING IDK
         >
-          <Text> + </Text>
-        </Pressable>
-        <Text style={{ paddingHorizontal: 6 }}> {state} </Text>
-        <Pressable
-          onPress={() => {
-            counterRemove();
-          }}
-          android_ripple={{ color: "silver" }}
-          style={{
-            paddingHorizontal: 20,
-            paddingVertical: 6,
-            backgroundColor: "silver",
-          }}
-        >
-          <Text> - </Text>
-        </Pressable>
+          <Text>Send Crash Report</Text>
+        </TouchableOpacity>
       </View>
     </>
   );

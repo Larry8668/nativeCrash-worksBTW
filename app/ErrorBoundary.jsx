@@ -1,6 +1,14 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Alert } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import {
+  storeData,
+  getData,
+  getMultipleData,
+  getAllData,
+  clearAllData,
+  handleErrorLogging,
+} from "./dataService";
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -20,18 +28,17 @@ class ErrorBoundary extends React.Component {
   }
   // setState((prev) => {})
   componentDidCatch(error, info) {
-    
     console.table({
       name: error.name,
       message: error.message,
       stack: error.stack,
     });
-    Alert.alert(
-      "Error!",
-      "An error has been picked up. It has been logged safely and can hence be used to send to the concerned authorities!.",
-      [{ text: "OK" }],
-      { cancelable: false }
-    );
+    // Alert.alert(
+    //   "Error!",
+    //   "An error has been picked up. It has been logged safely and can hence be used to send to the concerned authorities!.",
+    //   [{ text: "OK" }],
+    //   { cancelable: false }
+    // );
     // console.log("Error Info: " + JSON.stringify(info));
 
     const newErrorEntityToDB = {
@@ -39,6 +46,10 @@ class ErrorBoundary extends React.Component {
       errorTitle: error,
       errorDescription: JSON.stringify(info),
     };
+    storeData(newErrorEntityToDB.time.toString(), newErrorEntityToDB)
+      .then(() => console.log("error logged ..."))
+      .catch((error) => console.error("Error logging --> ", error));
+
     this.setState({
       error: error,
       errorInfo: info,
@@ -80,7 +91,7 @@ class ErrorBoundary extends React.Component {
             }`}
             onPress={() => {
               Alert.alert(
-                "More About Your Error!",
+                "More About The Error!",
                 `${JSON.stringify(this.state.errorInfo)}`,
                 [{ text: "OK" }],
                 { cancelable: false }
@@ -95,6 +106,13 @@ class ErrorBoundary extends React.Component {
               Know More
             </Text>
           </TouchableOpacity>
+          <Text
+            className={`flex flex-col space-y-4 items-center justify-center  text-2xl text-center font-bold ${
+              this.state.theme !== "DARK_MODE" ? "text-black" : "text-gray-100"
+            }`}
+          >
+            The error has been logged. Send us the Crash report in the main menu ...
+          </Text>
         </View>
       );
     }
