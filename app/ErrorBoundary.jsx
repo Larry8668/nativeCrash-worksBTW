@@ -1,14 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Alert } from "react-native";
 
-import {
-  storeData,
-  getData,
-  getMultipleData,
-  getAllData,
-  clearAllData,
-  handleErrorLogging,
-} from "./dataService";
+import { handleErrorLogging, handleRestartApp } from "./dataService";
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -41,14 +34,7 @@ class ErrorBoundary extends React.Component {
     // );
     // console.log("Error Info: " + JSON.stringify(info));
 
-    const newErrorEntityToDB = {
-      time: Date.now(),
-      errorTitle: error,
-      errorDescription: JSON.stringify(info),
-    };
-    storeData(newErrorEntityToDB.time.toString(), newErrorEntityToDB)
-      .then(() => console.log("error logged ..."))
-      .catch((error) => console.error("Error logging --> ", error));
+    handleErrorLogging(error, info);
 
     this.setState({
       error: error,
@@ -111,8 +97,25 @@ class ErrorBoundary extends React.Component {
               this.state.theme !== "DARK_MODE" ? "text-black" : "text-gray-100"
             }`}
           >
-            The error has been logged. Send us the Crash report in the main menu ...
+            The error has been logged. Send us the Crash report in the main menu
+            ...
           </Text>
+          <TouchableOpacity
+            className={`flex flex-col space-x-4 items-center justify-center p-2 text-2xl rounded-lg mb-3 font-bold ${
+              this.state.theme === "DARK_MODE" ? " bg-white" : " bg-black"
+            }`}
+            onPress={() => {
+              handleRestartApp();
+            }}
+          >
+            <Text
+              className={` text-1xl font-bold ${
+                this.state.theme === "DARK_MODE" ? " text-black" : "text-white "
+              }`}
+            >
+              Restart
+            </Text>
+          </TouchableOpacity>
         </View>
       );
     }

@@ -5,7 +5,9 @@ import {
   View,
   Pressable,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
+import Modal from "react-native-modal";
 import ErrorBoundary from "./ErrorBoundary";
 import {
   buttonStyles,
@@ -22,7 +24,8 @@ function PageContent() {
   const router = useRouter();
   // console.log(theme);
   const [state, setState] = useState(0);
-  const [asyncStoreData, setAsyncStoreData] = useState(null);
+  const [asyncStoreData, setAsyncStoreData] = useState({});
+  const [modalVisible, setModalVisible] = useState(false);
 
   const handleGetAllData = () => {
     // console.log("Entered handleGetAllData");
@@ -37,8 +40,13 @@ function PageContent() {
   };
   const handleClearAsyncStorage = () => {
     clearAllData()
-      .then(() => console.log("Async Storage emptied ..."))
+      .then(() => console.log("Async Storage emptied..."))
       .catch((error) => console.error("Error clearing storage --> ", error));
+  };
+  const handleContactDev = () => {
+    console.log("CRASH LOGS --> ", asyncStoreData);
+    setModalVisible(true);
+    //key is the "time" of each error object in str
   };
 
   const counterAdd = () => {
@@ -61,7 +69,7 @@ function PageContent() {
   useEffect(() => {
     handleGetAllData();
     // console.log("here -->",asyncStoreData);
-    // handleClearAsyncStorage();
+    // handleClearAsyncStorage(); //use this to reset the storage
   }, []);
   return (
     <>
@@ -119,11 +127,41 @@ function PageContent() {
         </View>
         <TouchableOpacity
           className={`${contactDevButtonStyle}`}
-          onPress={() => console.log(asyncStoreData)}
+          onPress={() => handleContactDev()}
           // disabled={!(asyncStoreData === null)} //NOT WORKING IDK
         >
           <Text>Send Crash Report</Text>
         </TouchableOpacity>
+      </View>
+      <View>
+        <Modal
+          isVisible={modalVisible}
+          style={{ flex: 1, alignItems: "center", justifyContent: "center",}}
+          onBackdropPress={() => {
+            setModalVisible(false);
+          }}
+        >
+          <ScrollView>
+            {Object.keys(asyncStoreData).length > 0 ? (
+              Object.keys(asyncStoreData).map((key, index) => (
+                <View key={index}>
+                  <Text style={{color: 'white'}}>Key: {key}</Text>
+                  <Text style={{color: 'white'}}>
+                    Error Description:{" "}
+                    {JSON.parse(asyncStoreData[key].errorDescription).componentStack}
+                  </Text>
+                  <Text style={{color: 'white'}}>
+                    Error Title: {asyncStoreData[key].errorTitle.componentStack}
+                  </Text>
+                  <Text style={{color: 'white'}}>Time: {asyncStoreData[key].time}</Text>
+                  <Text style={{color: 'white'}}>---------------------------------------------------------------------</Text>
+                </View>
+              ))
+            ) : (
+              <Text style={{color: 'white'}}>No data to display.</Text>
+            )}
+          </ScrollView>
+        </Modal>
       </View>
     </>
   );
