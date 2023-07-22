@@ -42,6 +42,7 @@ function PageContent() {
     clearAllData()
       .then(() => console.log("Async Storage emptied..."))
       .catch((error) => console.error("Error clearing storage --> ", error));
+
   };
   const handleContactDev = () => {
     console.log("CRASH LOGS --> ", asyncStoreData);
@@ -67,9 +68,9 @@ function PageContent() {
     recursiveFunction();
   }
   useEffect(() => {
-    handleGetAllData();
+    // handleGetAllData();
     // console.log("here -->",asyncStoreData);
-    // handleClearAsyncStorage(); //use this to reset the storage
+    handleClearAsyncStorage(); //use this to reset the storage
   }, []);
   return (
     <>

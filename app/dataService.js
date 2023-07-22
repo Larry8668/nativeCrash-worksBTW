@@ -67,7 +67,7 @@ export const handleErrorLogging = (error, info) => {
   storeData(newErrorEntityToDB.time.toString(), newErrorEntityToDB)
     .then(() => console.log("error logged ..."))
     .catch((error) => console.error("Error logging --> ", error));
-};
+  };
 
 export const handleRestartApp = async () => {
   try {
