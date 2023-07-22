@@ -14,20 +14,25 @@ class ErrorBoundary extends React.Component {
     };
   }
   static getDerivedStateFromError(error) {
-    console.log("ErrorStack ---: ", error.stack);
+    // console.log("ErrorStack ---: ", error.stack);
     // Update state so the next render will show the fallback UI.
     return { hasError: true };
   }
+  // setState((prev) => {})
   componentDidCatch(error, info) {
+    
+    console.table({
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+    });
     Alert.alert(
-      'Error!',
-      'An error has been picked up. It has been logged safely and can hence be used to send to the concerned authorities!.',
-      [
-        { text: 'OK', onPress: () => console.log('OK Pressed') },
-      ],
+      "Error!",
+      "An error has been picked up. It has been logged safely and can hence be used to send to the concerned authorities!.",
+      [{ text: "OK" }],
       { cancelable: false }
     );
-    console.log("Error Info: " + JSON.stringify(info));
+    // console.log("Error Info: " + JSON.stringify(info));
 
     const newErrorEntityToDB = {
       time: Date.now(),
@@ -66,7 +71,8 @@ class ErrorBoundary extends React.Component {
               this.state.theme !== "DARK_MODE" ? "text-black" : "text-gray-100"
             }`}
           >
-            Error Info: {JSON.stringify(this.state.errorInfo).slice(0, 100)} ....
+            Error Info: {JSON.stringify(this.state.errorInfo).slice(0, 100)}{" "}
+            ....
           </Text>
           <TouchableOpacity
             className={`flex flex-col space-x-4 items-center justify-center p-2 text-2xl rounded-lg mb-3 font-bold ${
@@ -74,11 +80,9 @@ class ErrorBoundary extends React.Component {
             }`}
             onPress={() => {
               Alert.alert(
-                'More About Your Error!',
+                "More About Your Error!",
                 `${JSON.stringify(this.state.errorInfo)}`,
-                [
-                  { text: 'OK', onPress: () => console.log('OK Pressed') },
-                ],
+                [{ text: "OK" }],
                 { cancelable: false }
               );
             }}
