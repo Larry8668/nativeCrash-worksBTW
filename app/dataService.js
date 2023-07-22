@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { resolve } from "expo-router/src/link/path";
+import * as Updates from 'expo-updates'; //this can also b used to roll out updates to app and make it auto update read docs
 
 //to store data, val shd b json => stringify b4 store
 export const storeData = (key, val) => {
@@ -48,8 +48,6 @@ export const getAllData = () => {
 };
 
 //to clear all data that has been sent to asyc store
-// @Leharaditya its not asyc its async 👀
-
 export const clearAllData = () => {
   return new Promise((resolve, reject) => {
     AsyncStorage.clear()
@@ -59,3 +57,22 @@ export const clearAllData = () => {
 };
 
 /////////////////////////////////////
+
+export const handleErrorLogging = (error, info) => {
+  const newErrorEntityToDB = {
+    time: Date.now(),
+    errorTitle: error,
+    errorDescription: JSON.stringify(info),
+  };
+  storeData(newErrorEntityToDB.time.toString(), newErrorEntityToDB)
+    .then(() => console.log("error logged ..."))
+    .catch((error) => console.error("Error logging --> ", error));
+};
+
+export const handleRestartApp = async () => {
+  try {
+    await Updates.reloadAsync();
+  } catch (error) {
+    console.error("Error while restarting the app:", error);
+  }
+};
