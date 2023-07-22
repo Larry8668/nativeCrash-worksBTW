@@ -48,6 +48,8 @@ export const getAllData = () => {
 };
 
 //to clear all data that has been sent to asyc store
+// @Leharaditya its not asyc its async 👀
+
 export const clearAllData = () => {
   return new Promise((resolve, reject) => {
     AsyncStorage.clear()
