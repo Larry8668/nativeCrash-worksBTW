@@ -68,9 +68,9 @@ function PageContent() {
     recursiveFunction();
   }
   useEffect(() => {
-    // handleGetAllData();
+    handleGetAllData();
     // console.log("here -->",asyncStoreData);
-    handleClearAsyncStorage(); //use this to reset the storage
+    // handleClearAsyncStorage(); //use this to reset the storage
   }, []);
   return (
     <>
@@ -142,24 +142,24 @@ function PageContent() {
             setModalVisible(false);
           }}
         >
-          <ScrollView>
+          <ScrollView className='w-fit md:w-[50%]'>
             {Object.keys(asyncStoreData).length > 0 ? (
               Object.keys(asyncStoreData).map((key, index) => (
                 <View key={index}>
-                  <Text style={{color: 'white'}}>Key: {key}</Text>
+                  <Text style={{color: 'white'}}>Index: {index+1}</Text>
+                  <Text style={{color: 'white'}}>
+                    Error Title: {asyncStoreData[key].errorTitle}
+                  </Text>
                   <Text style={{color: 'white'}}>
                     Error Description:{" "}
-                    {JSON.parse(asyncStoreData[key].errorDescription).componentStack}
+                    {JSON.parse(asyncStoreData[key].errorDescription).componentStack.slice(0, 300)}{" .......... "}
                   </Text>
-                  <Text style={{color: 'white'}}>
-                    Error Title: {asyncStoreData[key].errorTitle.componentStack}
-                  </Text>
-                  <Text style={{color: 'white'}}>Time: {asyncStoreData[key].time}</Text>
-                  <Text style={{color: 'white'}}>---------------------------------------------------------------------</Text>
+                  <Text style={{color: 'white'}}>Time: {new Date(asyncStoreData[key].time).toLocaleDateString()}</Text>
+                  <Text className='w-full border-b-2 border-dotted border-white my-2'></Text>
                 </View>
               ))
             ) : (
-              <Text style={{color: 'white'}}>No data to display.</Text>
+              <Text style={{color: 'white'}} className='text-center'>No data to display.</Text>
             )}
           </ScrollView>
         </Modal>

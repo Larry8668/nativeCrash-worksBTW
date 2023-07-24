@@ -59,9 +59,11 @@ export const clearAllData = () => {
 /////////////////////////////////////
 
 export const handleErrorLogging = (error, info) => {
+  
+  console.log(error.toString(), info);
   const newErrorEntityToDB = {
     time: Date.now(),
-    errorTitle: error,
+    errorTitle: error.toString(),
     errorDescription: JSON.stringify(info),
   };
   storeData(newErrorEntityToDB.time.toString(), newErrorEntityToDB)
