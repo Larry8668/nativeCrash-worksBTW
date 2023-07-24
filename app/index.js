@@ -182,9 +182,7 @@ function PageContent() {
 
 export default function Page() {
   return (
-    <ErrorBoundary theme="DARK_MODE">
       <PageContent />
-    </ErrorBoundary>
   );
 }
 

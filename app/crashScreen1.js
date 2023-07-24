@@ -69,9 +69,7 @@ const CrashScreen1Content = () => {
 
 const CrashScreen1 = () =>{
   return(
-    <ErrorBoundary>
       <CrashScreen1Content />
-    </ErrorBoundary>
   )
 }
 
