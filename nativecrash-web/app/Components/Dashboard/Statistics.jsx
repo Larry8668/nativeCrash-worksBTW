@@ -74,7 +74,7 @@ const data = {
 };
 
 const Statistics = () => {
-  return <Line options={options} data={data} height />;
+  return <Line options={options} data={data}  />;
 };
 
 export default Statistics;

@@ -9,7 +9,7 @@ const Introduction = () => {
         </span>{" "}
         Dashboard
       </h1>
-      <p class="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400 text-justify md:text-justify">
+      <p className="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400 text-justify md:text-justify">
         Here, You can view all your recent crashes that we recorded in elegant
         approach in a timeseries manner.
       </p>
