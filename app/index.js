@@ -17,7 +17,7 @@ import {
 import { useColorScheme } from "nativewind";
 import { useRouter } from "expo-router";
 
-import { getAllData, clearAllData } from "./dataService";
+import { getAllData, clearAllData, handleSendCrashMail } from "./dataService";
 
 function PageContent() {
   const theme = useColorScheme();
@@ -49,6 +49,12 @@ function PageContent() {
     console.log("CRASH LOGS --> ", asyncStoreData);
     setModalVisible(true);
     //key is the "time" of each error object in str
+
+    Object.keys(asyncStoreData).length > 0
+      ? handleSendCrashMail(Object.values(asyncStoreData))
+          .then(() => console.log("Email Sent"))
+          .catch((error) => console.error("Error sending mail --> ", error))
+      : console.log("Nothing to mail");
   };
 
   const counterAdd = () => {
@@ -134,7 +140,10 @@ function PageContent() {
         >
           <Text>Send Crash Report</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleClearAsyncStorage()} className={`${contactDevButtonStyle}`}>
+        <TouchableOpacity
+          onPress={() => handleClearAsyncStorage()}
+          className={`${contactDevButtonStyle}`}
+        >
           <Text>Empty AsyncStore</Text>
         </TouchableOpacity>
       </View>
@@ -181,9 +190,7 @@ function PageContent() {
 }
 
 export default function Page() {
-  return (
-      <PageContent />
-  );
+  return <PageContent />;
 }
 
 const styles = StyleSheet.create({

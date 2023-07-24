@@ -1,5 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as Updates from 'expo-updates'; //this can also b used to roll out updates to app and make it auto update read docs
+import * as Updates from "expo-updates"; //this can also b used to roll out updates to app and make it auto update read docs
+
+import axios from "axios";
 
 //to store data, val shd b json => stringify b4 store
 export const storeData = (key, val) => {
@@ -59,17 +61,28 @@ export const clearAllData = () => {
 /////////////////////////////////////
 
 export const handleErrorLogging = (error, info) => {
-  
   console.log(error.toString(), info);
   const newErrorEntityToDB = {
     time: Date.now(),
     errorTitle: error.toString(),
     errorDescription: JSON.stringify(info),
   };
+  axios
+    .post("https://yucca-interface.vercel.app/logerror", {
+      errorTitle: newErrorEntityToDB.errorTitle,
+      errorDescription: newErrorEntityToDB.errorDescription,
+      time: newErrorEntityToDB.time,
+    })
+    .then(() => {
+      console.log("Post req complete...");
+    })
+    .catch((error) => {
+      console.error("Error making post req --> ", error);
+    });
   storeData(newErrorEntityToDB.time.toString(), newErrorEntityToDB)
     .then(() => console.log("error logged ..."))
     .catch((error) => console.error("Error logging --> ", error));
-  };
+};
 
 export const handleRestartApp = async () => {
   try {
@@ -77,4 +90,18 @@ export const handleRestartApp = async () => {
   } catch (error) {
     console.error("Error while restarting the app:", error);
   }
+};
+
+export const handleSendCrashMail = async (items) => {
+  console.log("inside handleSendMail -->", items);
+  axios
+    .post("https://yucca-interface.vercel.app/sendcrashreport", {
+      arrayOfErrors: items,
+    })
+    .then(() => {
+      console.log("Post req complete (mail)...");
+    })
+    .catch((error) => {
+      console.error("Error making Post req (mail)--> ", error);
+    });
 };
