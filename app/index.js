@@ -43,6 +43,7 @@ function PageContent() {
       .then(() => console.log("Async Storage emptied..."))
       .catch((error) => console.error("Error clearing storage --> ", error));
 
+    setAsyncStoreData({});
   };
   const handleContactDev = () => {
     console.log("CRASH LOGS --> ", asyncStoreData);
@@ -133,33 +134,44 @@ function PageContent() {
         >
           <Text>Send Crash Report</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleClearAsyncStorage()} className={`${contactDevButtonStyle}`}>
+          <Text>Empty AsyncStore</Text>
+        </TouchableOpacity>
       </View>
       <View>
         <Modal
           isVisible={modalVisible}
-          style={{ flex: 1, alignItems: "center", justifyContent: "center",}}
+          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
           onBackdropPress={() => {
             setModalVisible(false);
           }}
         >
-          <ScrollView className='w-fit md:w-[50%]'>
+          <ScrollView className="w-fit md:w-[50%]">
             {Object.keys(asyncStoreData).length > 0 ? (
               Object.keys(asyncStoreData).map((key, index) => (
                 <View key={index}>
-                  <Text style={{color: 'white'}}>Index: {index+1}</Text>
-                  <Text style={{color: 'white'}}>
+                  <Text style={{ color: "white" }}>Index: {index + 1}</Text>
+                  <Text style={{ color: "white" }}>
                     Error Title: {asyncStoreData[key].errorTitle}
                   </Text>
-                  <Text style={{color: 'white'}}>
+                  <Text style={{ color: "white" }}>
                     Error Description:{" "}
-                    {JSON.parse(asyncStoreData[key].errorDescription).componentStack.slice(0, 300)}{" .......... "}
+                    {JSON.parse(
+                      asyncStoreData[key].errorDescription
+                    ).componentStack.slice(0, 300)}
+                    {" .......... "}
                   </Text>
-                  <Text style={{color: 'white'}}>Time: {new Date(asyncStoreData[key].time).toLocaleDateString()}</Text>
-                  <Text className='w-full border-b-2 border-dotted border-white my-2'></Text>
+                  <Text style={{ color: "white" }}>
+                    Time:{" "}
+                    {new Date(asyncStoreData[key].time).toLocaleDateString()}
+                  </Text>
+                  <Text className="w-full border-b-2 border-dotted border-white my-2"></Text>
                 </View>
               ))
             ) : (
-              <Text style={{color: 'white'}} className='text-center'>No data to display.</Text>
+              <Text style={{ color: "white" }} className="text-center">
+                No data to display.
+              </Text>
             )}
           </ScrollView>
         </Modal>
