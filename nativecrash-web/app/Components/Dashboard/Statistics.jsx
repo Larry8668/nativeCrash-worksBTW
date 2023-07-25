@@ -1,8 +1,9 @@
 "use client";
 import { Line } from "react-chartjs-2";
+import "chartjs-adapter-date-fns";
 import {
   Chart as ChartJS,
-  CategoryScale,
+  TimeScale,
   LinearScale,
   PointElement,
   LineElement,
@@ -11,7 +12,7 @@ import {
   Legend,
 } from "chart.js";
 ChartJS.register(
-  CategoryScale,
+  TimeScale,
   LinearScale,
   PointElement,
   LineElement,
@@ -19,37 +20,23 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: "bottom",
-    },
-    title: {
-      display: true,
-      text: "Native Crash Report.",
-    },
-  },
-};
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
-const gradientColor = {
-  type: "linear",
-  x0: 0,
-  y0: 0,
-  x1: 0,
-  y1: 1,
-  colorStops: [
-    { offset: 0, color: "rgba(126, 234, 184, 1)" },
-    { offset: 0.5, color: "rgba(126, 234, 184, 0.7)" },
-    { offset: 1, color: "rgba(126, 234, 184, 0)" },
-  ],
-};
+const labels = [
+  1690266648034,
+  1690266948022,
+  1690267248282,
+  1690267548101,
+  1690267848001,
+  1690268148102,
+  1690268448779,
+  1690269052756
+]
+
 const data = {
   labels,
   datasets: [
     {
       label: "Crash Report",
-      data: [100, 200, 300, 1000, 500, 600, 700],
+      data: [5, 2, 3, 10, 50, 60, 700,10],
       // backgroundColor: (context) => {
       //   const bgColors = ["rgba(10,255,10,0.8)", "rgba(0, 0, 0, 0.1)"];
       //   if (context.chart?.chartArea == undefined) {
@@ -66,15 +53,41 @@ const data = {
       //   console.log(gradient);
       //   return gradient;
       // },
-      backgroundColor: gradientColor,
+      // backgroundColor: gradientColor,
       borderColor: "rgb(0, 209, 98)",
-      tension:0.2,
+      tension: 0.2,
     },
   ],
 };
 
-const Statistics = () => {
+const Statistics = ({timeFilter}) => {
+  const options = {
+    responsive: true,
+    scales: {
+      x: {
+        type: "time",
+        // time: {
+        //   unit: timeFilter,
+        // },
+      },
+      y: {
+        beginAtZero: true,
+      },
+    },
+    plugins: {
+      legend: {
+        position: "bottom",
+      },
+      title: {
+        display: true,
+        text: "Native Crash Report.",
+      },
+    },
+  };
+
   return <Line options={options} data={data}  />;
 };
+// crashesErrors = {}
+// 
 
 export default Statistics;

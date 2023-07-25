@@ -1,14 +1,19 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import MapScreen from "./MapScreen";
-// import MapScreen from "./src/components/map"
+import ErrorBoundary from "./ErrorBoundary";
 
-const App = () => {
+const AppContent = () => {
   return (
     <View style={styles.container}>
       <MapScreen />
     </View>
   );
+};
+const App = () => {
+  // <ErrorBoundary>
+    <AppContent />
+  {/* </ErrorBoundary>; */}
 };
 const styles = StyleSheet.create({
   container: {
