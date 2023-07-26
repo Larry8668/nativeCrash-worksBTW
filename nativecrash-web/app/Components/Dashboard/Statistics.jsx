@@ -85,7 +85,7 @@ const Statistics = ({timeFilter}) => {
     },
   };
 
-  return <Line options={options} data={data}  />;
+  return <Line options={options} data={data}   />;
 };
 // crashesErrors = {}
 // 

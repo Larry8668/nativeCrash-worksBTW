@@ -4,8 +4,9 @@ import Statistics from "./Statistics";
 import { MdQueryStats } from "react-icons/md";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import FilterBlock from "./FilterBlock";
 import axios from "axios";
-import Errors from "./Errors";
+import Description from "../Dashboard/Description";
 const timeFilters = ["hour", "day", "week"];
 const filterItems = [
   {
@@ -27,6 +28,7 @@ const Information = () => {
 
   const [backendData, setBackendData] = useState(null);
   const [allErrors, setAllErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const getCrashReport = (e, uniqueIdentifier) => {
     console.log(uniqueIdentifier);
 
@@ -87,67 +89,69 @@ const Information = () => {
         </button>
       </div>
       <div>
-        <div className=" md:h-[50vh] md:w-[100vh] flex flex-col md:flex-row items-start justify-between">
-          <Statistics timeFilter={timeFilters[idSelected]} />
-          <div className="flex flex-col p-3 space-y-32 items-start justify-center">
-            <div className="dropdown flex">
-              <label tabIndex={0} className="btn m-1">
-                Select Timeframe
-              </label>
-              <div
-                tabIndex={0}
-                data-theme="forest"
-                className="dropdown-content z-[1] card card-compact w-64 p-2 shadow bg-primary text-primary-content"
-              >
-                <div className="card-body">
-                  <h3 className="card-title">Select a timeframe!</h3>
-                  {filterItems?.map((filterItem, index) => (
-                    <p
-                      key={index}
-                      className={`text-md font-bold cursor-pointer w-fit  ${
-                        idSelected === index
-                          ? "bg-black w-fit text-white rounded-lg md:p-2"
-                          : "text-gray-200"
-                      }  transition ease-in-out duration-500`}
-                      onClick={() => {
-                        setIdSelected(index);
-                      }}
-                    >
-                      {filterItem.title}
-                    </p>
-                  ))}
-                </div>
+        <div className=" flex flex-col items-start justify-between">
+          <div className="h-fit w-full md:h-full md:w-full relative">
+            <Statistics timeFilter={timeFilters[idSelected]} />
+          </div>
+          <div className="flex flex-col md:flex-row md:space-x-32 p-3  items-start justify-center w-screen ">
+            <div
+              tabIndex={0}
+              data-theme="forest"
+              className=" z-[1] card card-compact w-64 p-2 shadow bg-primary text-primary-content"
+            >
+              <div className="card-body">
+                <h3 className="card-title">Select a timeframe!</h3>
+                {filterItems?.map((filterItem, index) => (
+                  <p
+                    key={index}
+                    className={`text-md font-bold cursor-pointer w-fit  ${
+                      idSelected === index
+                        ? "bg-black w-fit text-white rounded-lg md:p-2"
+                        : "text-gray-200"
+                    }  transition ease-in-out duration-500`}
+                    onClick={() => {
+                      setIdSelected(index);
+                    }}
+                  >
+                    {filterItem.title}
+                  </p>
+                ))}
               </div>
             </div>
-            <div
-              className="mockup-code  w-[50vh] my-4 relative mt-9"
-              data-theme="forest"
-            >
-              <p className="pl-4">
-                {idSelected !== null
-                  ? filterItems[idSelected].text
-                  : "Select A timeframe to view all the errors your application has faced!"}
-              </p>
-            </div>
+            <Description idSelected={idSelected} />
           </div>
         </div>
-        {backendData && (
-          <div
-            data-theme="forest"
-            className="space-y-6 mx-5 relative w-[90%] items-center justify-center"
-          >
-            {backendData?.map((backendDataItem, index) => (
-              <ErrorComponent
-                key={index}
-                inedx={index}
-                errorTitle={backendDataItem.errortitle}
-                errorInfo={backendDataItem.errordescription}
-                date={backendDataItem.time}
-              />
-            ))}
-
-
-          </div>
+      </div>
+      <div className="w-full h-fit relative flex-col m">
+        {!isLoading ? (
+          backendData === null ? (
+            <h1 className="mb-4 text-4xl my-7 font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white bg-secondary text-center ">
+              Enter an Unique Identifier to view crashes
+            </h1>
+          ) : (
+            <>
+              <div className="my-9">
+                <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white bg-secondary text-center">
+                  Hey Developer, Your crash report is here!
+                </h1>
+              </div>
+              {backendData
+                .sort((a, b) => b.time - a.time) // Sort the array in ascending order based on 'time' field
+                .map((errorItem, index) => (
+                  <ErrorUnit
+                    key={index}
+                    index={index}
+                    errorTitle={errorItem.errortitle}
+                    errorInfo={errorItem.errordescription}
+                    date={errorItem.time}
+                  />
+                ))}
+            </>
+          )
+        ) : (
+          <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white bg-secondary text-center animate-pulse">
+            Fetching Your Crash Report....
+          </h1>
         )}
       </div>
       <ToastContainer />
@@ -157,17 +161,21 @@ const Information = () => {
 
 export default Information;
 
-const ErrorComponent = ({ index, errorTitle, errorInfo, date }) => {
-  useEffect(()=> {
-    console.log(errorInfo)
-  })
+const ErrorUnit = ({ index, errorTitle, errorInfo, date }) => {
+  let bgColors = [
+    'bg-accent',
+    'bg-primary',
+    'bg-secondary'
+  ]
   return (
-    <div className=" h-fit p-3 flex flex-row space-x-5 rounded bg-primary text-primary-content self-center">
-      <p>{index}</p>
-      {/* <p>{errorTitle}</p> */}
-      <p>{errorInfo.substring(0, 100)}</p>
-      {/* <p>{date}</p> */}
-
+    <div className={` h-fit p-3 m-3 flex flex-col md:flex-row relative rounded ${bgColors[index%3]} text-primary-content self-center items-center justify-between px-4`}>
+      <p>{index + 1}</p>
+      <p>{errorTitle}</p>
+      {/* <p>{errorInfo.substring(0, 100)}</p> */}
+      <p>
+        {new Date(Number(date)).toLocaleDateString()}{" "}
+        {new Date(Number(date)).toLocaleTimeString()}
+      </p>
     </div>
   );
 };
