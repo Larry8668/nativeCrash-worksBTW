@@ -2,6 +2,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { BsGithub } from "react-icons/bs";
+import { AiOutlineStar } from 'react-icons/ai'
 const NavigationBar = () => {
   const router = useRouter();
   return (
@@ -28,21 +29,14 @@ const NavigationBar = () => {
             tabIndex={0}
             className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
           >
-            <li>
+            <li onClick={() => {
+              router.push("/");
+            }}>
               <a>About</a>
             </li>
-            <li>
-              <a>Parent</a>
-              <ul className="p-2">
-                <li>
-                  <a>Submenu 1</a>
-                </li>
-                <li>
-                  <a>Submenu 2</a>
-                </li>
-              </ul>
-            </li>
-            <li>
+            <li onClick={() => {
+              router.push("/dashboard");
+            }}>
               <a>Dashboard</a>
             </li>
           </ul>
@@ -58,19 +52,6 @@ const NavigationBar = () => {
           >
             <a>Dashboard</a>
           </li>
-          <li tabIndex={0}>
-            <details>
-              <summary>Parent</summary>
-              <ul className="p-2">
-                <li>
-                  <a>Submenu 1</a>
-                </li>
-                <li>
-                  <a>Submenu 2</a>
-                </li>
-              </ul>
-            </details>
-          </li>
           <li
             onClick={() => {
               router.push("/");
@@ -80,9 +61,14 @@ const NavigationBar = () => {
           </li>
         </ul>
       </div>
-      <div className="navbar-end mr-5">
+      <div className="navbar-end mr-5 ">
+        <a className="mr-7 flex flex-row space-x-3">
+          <AiOutlineStar size={25} className = 'hover:text-yellow-300 cursor-pointer translate-x-2 transition ease-out duration-150'/>
+          <p>Give Us A Star</p>
+        </a>
+
         <a className="b">
-          <BsGithub size = {25} />
+          <BsGithub size={25} />
         </a>
       </div>
     </div>

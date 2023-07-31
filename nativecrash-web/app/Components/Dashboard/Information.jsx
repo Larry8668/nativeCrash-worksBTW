@@ -47,6 +47,18 @@ const Information = () => {
       });
       return;
     } else {
+      toast.info("Fetching Data...", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      
+      setIsLoading(true)
       axios
         .get(
           `https://yucca-interface.vercel.app/crashreport?uid=${uniqueIdentifier}`
@@ -66,7 +78,20 @@ const Information = () => {
             progress: undefined,
             theme: "light",
           });
-        });
+        }).catch((err) => {
+          toast.error( `${JSON.stringify(err)}` , {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+
+        })
+        setIsLoading(false);
     }
   };
   return (

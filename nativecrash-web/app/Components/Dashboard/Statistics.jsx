@@ -62,9 +62,21 @@ const Statistics = (props) => {
             label: "Crash Report",
             data: Object.values(graphData),
             borderColor: "rgb(0, 209, 98)",
-            backgroundColor: "rgba(75, 192, 192, 0.2)", // End color with opacity
+            backgroundColor: (context) => {
+              const chartArea = context.chart.chartArea;
+              const ctx = context.chart.ctx;
+              const gradient = ctx.createLinearGradient(
+                chartArea.left,
+                chartArea.top,
+                chartArea.right,
+                chartArea.bottom
+              );
+              gradient.addColorStop(0, "rgba(0, 209, 98, 1)"); // Green at the top
+              gradient.addColorStop(1, "rgba(0, 10, 0, 0)"); // Transparent black at the bottom
+              return gradient;
+            }, // End color with opacity
             fill: true, // To fill the area under the line with the gradient
-            tension: 0.2,
+            tension: 0.3,
           },
         ],
       });
@@ -93,7 +105,7 @@ const Statistics = (props) => {
   };
   //conditional rendering req
   return (
-    <div className="flex justify-center items-center w-[full] h-[80vh]">
+    <div className="flex justify-center items-center w-full h-[40vh] md:h-[80vh]">
       <Line options={options} data={data} />
     </div>
   );
