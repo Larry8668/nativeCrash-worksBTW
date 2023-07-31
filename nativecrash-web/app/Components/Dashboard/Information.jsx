@@ -7,6 +7,8 @@ import "react-toastify/dist/ReactToastify.css";
 import FilterBlock from "./FilterBlock";
 import axios from "axios";
 import Description from "../Dashboard/Description";
+import FilterAndShowData from "./FilterAndShowData";
+
 const timeFilters = ["hour", "day", "week"];
 const filterItems = [
   {
@@ -91,7 +93,7 @@ const Information = () => {
       <div>
         <div className=" flex flex-col items-start justify-between">
           <div className="h-fit w-full md:h-full md:w-full relative">
-            <Statistics timeFilter={timeFilters[idSelected]} />
+            <Statistics backendData={backendData} filterSelected={idSelected} />
           </div>
           <div className="flex flex-col md:flex-row md:space-x-32 p-3  items-start justify-center w-screen ">
             <div
@@ -122,60 +124,14 @@ const Information = () => {
           </div>
         </div>
       </div>
-      <div className="w-full h-fit relative flex-col m">
-        {!isLoading ? (
-          backendData === null ? (
-            <h1 className="mb-4 text-4xl my-7 font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white bg-secondary text-center ">
-              Enter an Unique Identifier to view crashes
-            </h1>
-          ) : (
-            <>
-              <div className="my-9">
-                <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white bg-secondary text-center">
-                  Hey Developer, Your crash report is here!
-                </h1>
-              </div>
-              {backendData
-                .sort((a, b) => b.time - a.time) // Sort the array in ascending order based on 'time' field
-                .map((errorItem, index) => (
-                  <ErrorUnit
-                    key={index}
-                    index={index}
-                    errorTitle={errorItem.errortitle}
-                    errorInfo={errorItem.errordescription}
-                    date={errorItem.time}
-                  />
-                ))}
-            </>
-          )
-        ) : (
-          <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white bg-secondary text-center animate-pulse">
-            Fetching Your Crash Report....
-          </h1>
-        )}
-      </div>
+      <FilterAndShowData
+        isLoading={isLoading}
+        backendData={backendData}
+        idSelected={idSelected}
+      />
       <ToastContainer />
     </div>
   );
 };
 
 export default Information;
-
-const ErrorUnit = ({ index, errorTitle, errorInfo, date }) => {
-  let bgColors = [
-    'bg-accent',
-    'bg-primary',
-    'bg-secondary'
-  ]
-  return (
-    <div className={` h-fit p-3 m-3 flex flex-col md:flex-row relative rounded ${bgColors[index%3]} text-primary-content self-center items-center justify-between px-4`}>
-      <p>{index + 1}</p>
-      <p>{errorTitle}</p>
-      {/* <p>{errorInfo.substring(0, 100)}</p> */}
-      <p>
-        {new Date(Number(date)).toLocaleDateString()}{" "}
-        {new Date(Number(date)).toLocaleTimeString()}
-      </p>
-    </div>
-  );
-};
