@@ -11,11 +11,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import {
-  filterData,
-  getListForGraph,
-  dateArrayToEpoch,
-} from "../Miscellaneous/HelperFunc";
+import { filterData, getListForGraph } from "../Miscellaneous/HelperFunc";
 import { useState, useEffect } from "react";
 ChartJS.register(
   TimeScale,
@@ -26,39 +22,6 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-// const labels = [
-//   1690266648034, 1690266948022, 1690267248282, 1690267548101, 1690267848001,
-//   1690268148102, 1690268448779, 1690269052756,
-// ];
-
-// const data = {
-//   labels,
-//   datasets: [
-//     {
-//       label: "Crash Report",
-//       data: [500, 2, 3, 10, 50, 60, 700, 10],
-//       // backgroundColor: (context) => {
-//       //   const bgColors = ["rgba(10,255,10,0.8)", "rgba(0, 0, 0, 0.1)"];
-//       //   if (context.chart?.chartArea == undefined) {
-//       //     return;
-//       //   }
-//       //   const {
-//       //     ctx,
-//       //     data,
-//       //     chartArea: { top, bottom },
-//       //   } = context.chart;
-//       //   var gradient = ctx.createLinearGradient(0,0,0,400);
-//       //   gradient.addColorStop(1, bgColors[0]);
-//       //   gradient.addColorStop(0, bgColors[1]);
-//       //   console.log(gradient);
-//       //   return gradient;
-//       // },
-//       // backgroundColor: gradientColor,
-//       borderColor: "rgb(0, 209, 98)",
-//       tension: 0.2,
-//     },
-//   ],
-// };
 
 const initialData = {
   labels: [],
@@ -68,6 +31,8 @@ const initialData = {
       data: [],
       borderColor: "rgb(0, 209, 98)",
       tension: 0.2,
+      backgroundColor: "rgba(75, 192, 192, 0.2)", // End color with opacity
+      fill: true, // To fill the area under the line with the gradient
     },
   ],
 };
@@ -77,7 +42,11 @@ const Statistics = (props) => {
   const [data, setData] = useState(initialData);
   const [filteredData, setFilteredData] = useState([]);
 
-  console.log(backendData, filterSelected);
+  // console.log(backendData, filterSelected);
+  // const filteredData = filterData(backendData, filterSelected);
+  // getHourlyCount(filteredData);
+  // getWeeklyCount(filteredData);
+  // getMonthlyCount(filteredData);
 
   useEffect(() => {
     if (backendData != null) {
@@ -93,6 +62,8 @@ const Statistics = (props) => {
             label: "Crash Report",
             data: Object.values(graphData),
             borderColor: "rgb(0, 209, 98)",
+            backgroundColor: "rgba(75, 192, 192, 0.2)", // End color with opacity
+            fill: true, // To fill the area under the line with the gradient
             tension: 0.2,
           },
         ],
@@ -120,8 +91,12 @@ const Statistics = (props) => {
       },
     },
   };
-
-  return <Line options={options} data={data} />; //conditional rendering req
+  //conditional rendering req
+  return (
+    <div className="flex justify-center items-center w-[full] h-[80vh]">
+      <Line options={options} data={data} />
+    </div>
+  );
 };
 // crashesErrors = {}
 //

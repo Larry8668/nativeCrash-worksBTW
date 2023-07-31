@@ -92,43 +92,67 @@ const Information = () => {
       </div>
       <div>
         <div className=" flex flex-col items-start justify-between">
-          <div className="h-fit w-full md:h-full md:w-full relative">
-            <Statistics backendData={backendData} filterSelected={idSelected} />
-          </div>
-          <div className="flex flex-col md:flex-row md:space-x-32 p-3  items-start justify-center w-screen ">
-            <div
-              tabIndex={0}
-              data-theme="forest"
-              className=" z-[1] card card-compact w-64 p-2 shadow bg-primary text-primary-content"
-            >
-              <div className="card-body">
-                <h3 className="card-title">Select a timeframe!</h3>
-                {filterItems?.map((filterItem, index) => (
-                  <p
-                    key={index}
-                    className={`text-md font-bold cursor-pointer w-fit  ${
-                      idSelected === index
-                        ? "bg-black w-fit text-white rounded-lg md:p-2"
-                        : "text-gray-200"
-                    }  transition ease-in-out duration-500`}
-                    onClick={() => {
-                      setIdSelected(index);
-                    }}
-                  >
-                    {filterItem.title}
-                  </p>
-                ))}
-              </div>
-            </div>
-            <Description idSelected={idSelected} />
+          <div className="w-full h-fit relative flex-col m">
+            {!isLoading ? (
+              backendData === null ? (
+                <h1 className="mb-4 text-4xl my-7 font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white bg-secondary text-center ">
+                  Enter an Unique Identifier to view crashes
+                </h1>
+              ) : (
+                <>
+                  <div className="my-9">
+                    <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white bg-secondary text-center">
+                      Hey Developer, Your crash report is here!
+                    </h1>
+                  </div>
+                  <div className="h-fit w-full md:h-full md:w-full relative">
+                    <Statistics
+                      backendData={backendData}
+                      filterSelected={idSelected}
+                    />
+                  </div>
+                  <div className="flex flex-col md:flex-row md:space-x-32 p-3  items-start justify-center w-screen ">
+                    <div
+                      tabIndex={0}
+                      data-theme="forest"
+                      className=" z-[1] card card-compact w-64 p-2 shadow bg-primary text-primary-content"
+                    >
+                      <div className="card-body">
+                        <h3 className="card-title">Select a timeframe!</h3>
+                        {filterItems?.map((filterItem, index) => (
+                          <p
+                            key={index}
+                            className={`text-md font-bold cursor-pointer w-fit  ${
+                              idSelected === index
+                                ? "bg-black w-fit text-white rounded-lg md:p-2"
+                                : "text-gray-200"
+                            }  transition ease-in-out duration-500`}
+                            onClick={() => {
+                              setIdSelected(index);
+                            }}
+                          >
+                            {filterItem.title}
+                          </p>
+                        ))}
+                      </div>
+                    </div>
+                    <Description idSelected={idSelected} />
+                  </div>
+                  <FilterAndShowData
+                    isLoading={isLoading}
+                    backendData={backendData}
+                    idSelected={idSelected}
+                  />
+                </>
+              )
+            ) : (
+              <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white bg-secondary text-center animate-pulse">
+                Fetching Your Crash Report....
+              </h1>
+            )}
           </div>
         </div>
       </div>
-      <FilterAndShowData
-        isLoading={isLoading}
-        backendData={backendData}
-        idSelected={idSelected}
-      />
       <ToastContainer />
     </div>
   );

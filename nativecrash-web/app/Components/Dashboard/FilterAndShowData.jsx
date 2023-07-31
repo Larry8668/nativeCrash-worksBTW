@@ -8,19 +8,9 @@ const FilterAndShowData = (props) => {
 
   console.log(isLoading, idSelected, backendData);
   return (
-    <div className="w-full h-fit relative flex-col m">
-      {!isLoading ? (
-        backendData === null ? (
-          <h1 className="mb-4 text-4xl my-7 font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white bg-secondary text-center ">
-            Enter an Unique Identifier to view crashes
-          </h1>
-        ) : (
+    
           <>
-            <div className="my-9">
-              <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white bg-secondary text-center">
-                Hey Developer, Your crash report is here!
-              </h1>
-            </div>
+            
             {filteredData
               .sort((a, b) => b.time - a.time) // Sort the array in ascending order based on 'time' field
               .map((errorItem, index) => (
@@ -33,13 +23,7 @@ const FilterAndShowData = (props) => {
                 />
               ))}
           </>
-        )
-      ) : (
-        <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white bg-secondary text-center animate-pulse">
-          Fetching Your Crash Report....
-        </h1>
-      )}
-    </div>
+       
   );
 };
 
