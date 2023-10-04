@@ -13,10 +13,10 @@ const Contributors = () => {
     },
     {
       name: 'Leharaditya Kumar',
-      githubLink: '',
+      githubLink: 'https://github.com/Larry8668',
       role: 'Dev',
       background: 'bg-accent',
-      src:'@lehar put pic here'
+      src:'/lehar_unofficial.jpg'
     },
 
   ]
